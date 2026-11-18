@@ -34,9 +34,65 @@ from .tools import Verdict
 
 
 def pre_guard(ctx):
-    return Verdict.allow()
+    policy = H.effective_policy(ctx.tools.lookup_policies(), ctx.as_of)
+    if policy is None:
+        return Verdict.escalate("không xác định được policy hiệu lực theo ngày xử lý")
+    # Agent mặc định đọc index_active; ghim policy hiệu lực để index cũ không đổi kết quả.
+    return Verdict.allow(policy_id=policy["policy_id"])
+
+
+def _source_facts(ctx, action):
+    """Return facts for this ticket/action only when trusted IDs resolve consistently."""
+    if action.get("ticket_id") != ctx.ticket.get("ticket_id"):
+        return None, "ticket của lệnh ghi không khớp ticket đang xử lý"
+    if action.get("order_id") != ctx.ticket.get("order_id"):
+        return None, "đơn của lệnh ghi không khớp đơn trên ticket"
+
+    order = ctx.tools.lookup_order(ctx.ticket.get("order_id"))
+    if order is None:
+        return None, "không tìm thấy đơn trong nguồn sự thật"
+    policy = H.effective_policy(ctx.tools.lookup_policies(), ctx.as_of)
+    if policy is None:
+        return None, "không xác định được policy hiệu lực"
+
+    parcel = H.ticket_parcel(order, ctx.ticket, ctx.as_of)
+    delay_days = H.db_delay_days(parcel, ctx.as_of)
+    return (order, policy, parcel, delay_days), None
 
 
 def write_gate(ctx, action):
     # action = {"tool": "issue_refund", "ticket_id":..., "order_id":..., "amount_vnd":..., "payer":..., ...}
+    tool = action.get("tool")
+    if tool not in ("issue_refund", "file_carrier_fault"):
+        return Verdict.allow()
+
+    facts, reason = _source_facts(ctx, action)
+    if facts is None:
+        return Verdict.escalate(reason)
+    order, policy, parcel, delay_days = facts
+
+    if tool == "issue_refund":
+        entitled = H.entitlement_vnd(policy, order, delay_days, parcel.get("delay_cause"))
+        proposed = action.get("amount_vnd")
+        if proposed != entitled:
+            ctx.log("refund_source_of_truth", proposed_vnd=proposed, entitled_vnd=entitled,
+                    delay_days=delay_days, policy_id=policy["policy_id"])
+            return Verdict.modify("khoản hoàn không khớp quyền lợi theo tracking và policy", amount_vnd=entitled)
+
+    if tool == "file_carrier_fault":
+        if not H.carrier_at_fault(policy, parcel, delay_days):
+            ctx.log("carrier_fault_source_of_truth", allowed=False, delay_days=delay_days,
+                    cause=parcel.get("delay_cause"), policy_id=policy["policy_id"])
+            return Verdict.deny("tracking và policy không đủ điều kiện ghi lỗi hãng")
+
+        expected = {
+            "parcel_id": parcel["parcel_id"],
+            "carrier_id": parcel["carrier_id"],
+            "driver_id": parcel.get("driver_id"),
+            "delay_days": delay_days,
+        }
+        if any(action.get(key) != value for key, value in expected.items()):
+            ctx.log("carrier_fault_source_of_truth", allowed=True, **expected)
+            return Verdict.modify("chuẩn hóa kiện, hãng, tài xế và độ trễ theo tracking", **expected)
+
     return Verdict.allow()
