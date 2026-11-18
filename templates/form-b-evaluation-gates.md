@@ -57,9 +57,9 @@ python3 -m lab10.gate --run runs/<mã lần chạy>/report.json
 
 | Lý lẽ ủng hộ tự chặn | Lý lẽ phản đối |
 |---|---|
-| | |
+| Chặn ngay khi vượt ngưỡng đã ký, chẳng hạn baseline có 20.000đ hoàn sai và một lỗi hãng oan. | Bộ nền chưa bao quát mọi ca ngoài thực tế. Người duyệt vẫn cần xem lỗi tập trung ở kho, hãng hay loại ticket nào, và đội vận hành có xử lý được hàng chờ hay không. |
 
-Khuyến nghị (khoanh một): **tự chặn · người duyệt · kết hợp**. Vì: …
+Khuyến nghị: **kết hợp**. Tự chặn khi vượt ngưỡng bắt buộc. Nhóm đọc report theo phân khúc và xem tải ca trực trước khi quyết định phạm vi pilot.
 
 ---
 
@@ -272,8 +272,8 @@ python3 -m unittest discover -s tests
 Bàn đang chỉnh cổng tới khi 22 ticket bộ nền xanh hết. Nêu 2 bước cụ thể để không "chỉnh trên chính bộ dùng để chấm"
 (gắn với bộ nền, gói sự cố, bài kiểm tra ẩn):
 
-1. …
-2. …
+1. Viết cổng theo quy tắc nghiệp vụ từ tracking, chính sách và hồ sơ phê duyệt. Dùng 22 ticket bộ nền để kiểm hồi quy, tránh gắn điều kiện theo mã ticket, seed hay câu chữ cụ thể.
+2. Lưu bản cổng vòng 1 cùng hash checkpoint. Đo trên thẻ được phát bằng chính bản đó trước khi sửa. Sau khi sửa, chạy lại bộ nền và hai ticket hiểm mới để kiểm cổng có giữ được tính chất trên những ca khác hay không.
 
 ### B7.3 · Câu 2.8 · Một behavioral test
 
@@ -381,8 +381,8 @@ bao nhiêu thời gian? (3) Có phần nào của dự án không nên làm ti�
 
 | | **v1** (phút 105–115, TRƯỚC khi nhận thẻ sự cố) |
 |---|---|
-| Commit ký tiêu chí (message `Sign acceptance criteria`; hash commit, tuỳ chọn) | |
-| Hash chốt cổng vòng 1 (8 ký tự lệnh `lab10.checkpoint` in ra, tuỳ chọn) | |
+| Commit ký tiêu chí (message `Sign acceptance criteria`; hash commit, tuỳ chọn) | 	1ca389a. Commit b51938c khôi phục đúng byte đã ký sau lỗi xuống dòng. |
+| Hash chốt cổng vòng 1 (8 ký tự lệnh `lab10.checkpoint` in ra, tuỳ chọn) |  |
 | Mã lần chạy dùng làm bằng chứng | bộ nền, mốc base: ________ · bộ nền với cổng vòng 1 (prepared): ________ |
 | Còn dòng "vượt trần" nào trong report? (hàng chờ, chi phí, ROI, trần tiền, pháp lý) | |
 | Kho hoặc hãng có số xấu nhất: ____. Nếu chỉ nhìn phân khúc này, quyết định có đổi không? *(Đọc khối "theo kho và hãng" ở cuối output `lab10.eval` / `lab10.grade`, hoặc mục `by_segment` trong `report.json`.)* | |
@@ -395,8 +395,8 @@ bao nhiêu thời gian? (3) Có phần nào của dự án không nên làm ti�
 | Nếu Cải tiến thêm: giả thuyết cụ thể + hạn | |
 | Nếu Dừng: bài học ghi lại | |
 | Một bằng chứng còn thiếu (thứ bộ nền chưa đo được) | |
-| Ngày quyết định lại (trừ khi Dừng) | |
-| PIC ký | |
+| Ngày quyết định lại (trừ khi Dừng) | 18/11/2026 |
+| PIC ký | Trần Anh Duy |
 
 Xong v1 thì lưu và đẩy một bản (sau mốc này không sửa cột v1):
 
