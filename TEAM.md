@@ -14,7 +14,7 @@ Họ tên đầy đủ và MSSV của **mọi** thành viên; thêm dòng nếu 
 | STT | Họ và tên | MSSV | Vai | Trưởng nhóm |
 | --: | --------- | ---- | --- | :---------: |
 |   1 |           |      |     |             |
-|   2 |           |      |     |             |
+|   2 | Trương Lợi Vĩ | 2A202603441| Kỹ sư cổng · cổng, checkpoint, kiểm thử S6 | |
 |   3 | Trần Dương Trung Tính | 2A202603488 | Kỹ sư cổng · trace, kiểm thử, monitor | |
 |   4 |           |      |     |             |
 |   5 |           |      |     |             |
@@ -42,6 +42,35 @@ Mã commit, mã lần chạy (`runs/<mã>`), dòng trong phiếu.
 ### Exit ticket
 
 Một điều học được, một điều còn chưa chắc.
+
+## TruongLoiVi-<MSSV-cua-Vi>
+
+### Phần việc phụ trách
+
+Tôi phụ trách kỹ sư cổng: xây dựng và chốt ba cổng vòng 1 trong `lab10/guards.py`, xác nhận `config/operating_gates.json`, checkpoint `ec3a692b`, chạy baseline/prepared/gate và điền bằng chứng B0–B1, B7.1. Ở vòng 2, tôi sửa cổng S6 trong `lab10/guards.py`, ghép monitor của Tính vào `lab10/monitors.py`, kiểm regression bộ nền và bàn giao trace/report cho Phiếu C.
+
+### Đóng góp cụ thể
+
+- **Cổng vòng 1 và checkpoint.** Viết ba cổng dựa vào nguồn sự thật: ghim policy hiệu lực; tính lại khoản hoàn từ tracking và policy; chỉ ghi lỗi hãng khi kiện, hãng, tài xế và độ trễ khớp tracking. Chốt snapshot vòng 1 `ec3a692b`.
+- **Đánh giá vòng 1.** Kiểm lại baseline `R-base-before-20261118-171311-d298f2`: pass_rate `0,9909`, pass_k `0,9545`, còn hoàn sai `20.000đ` và 1 lỗi hãng oan. Prepared `R-base-prepared-20261118-171319-d298f2` đạt pass_rate/pass_k `1,0`, hoàn sai/lỗi hãng oan/PII đều `0`, không có dòng vượt trần.
+- **Sửa sự cố S6.** Thêm cổng chuyển người trước mọi thao tác ghi khi đơn nhiều kiện nhưng ticket không xác định kiện liên quan; thêm cổng không tự ghi lỗi hãng khi đã chạm trần lỗi tự động theo hãng/ngày. Hai cổng dùng quy tắc tổng quát, không nhắm ID ticket.
+- **Kiểm chứng S6.** `S6-20@11` được chuyển người trước ghi; sổ cái, lỗi hãng và gửi hãng đều rỗng. `S6-42@11` vẫn hoàn đúng `22.000đ`, nhưng không tự ghi lỗi GHSH khi đã có 2 lỗi tự động trong ngày.
+- **Phối hợp monitor và bàn giao.** Ghép `max_daily_carrier_faults` của Tính; monitor sáng đèn từ `1,0` trên bộ nền lên `2,0` sau sửa S6. Gửi report, trace và số liệu hàng chờ/lỗi hãng oan/PII cho Duy để hoàn thiện C8–C11.
+
+**Sử dụng AI.** Tôi dùng AI để hỗ trợ đọc mã, kiểm tra logic guard, chạy lệnh, đối chiếu trace và biên tập bằng chứng. Tôi chịu trách nhiệm quyết định phạm vi cổng, kiểm tra kết quả và bàn giao mã run cho nhóm.
+
+### Bằng chứng
+
+- Commit `a996189`: cổng nguồn sự thật vòng 1.
+- Commit `29e104d`: chia sẻ checkpoint vòng 1.
+- Commit `60b84e5` trên nhánh `vi/round1-s6`: cổng S6 v2 và ghép monitor `max_daily_carrier_faults`.
+- Baseline/prepared: `R-base-before-20261118-171311-d298f2` · `R-base-prepared-20261118-171319-d298f2`.
+- S6 after/grade: `R-S6-after-20261118-172821-cd4e5a` · `R-S6-grade-20261118-172821-cd4e5a`.
+- Phiếu B: B0–B1, B7.1. Phiếu C: bằng chứng cho C7, C8–C9 và C11.
+
+### Exit ticket
+
+Tôi rút ra rằng tracking là nguồn sự thật cần thiết nhưng chưa đủ để quy lỗi cho bên thứ ba khi ticket không xác định được kiện liên quan. Cổng phải chuyển người trước thao tác không đảo ngược; monitor giúp phát hiện khi lỗi tự động dồn tới ngưỡng. Tôi còn chưa chắc tải chuyển người trong pilot thật có luôn giữ được SLA 60 phút hay không.
 
 ## TranDuongTrungTinh-2A202603488
 
