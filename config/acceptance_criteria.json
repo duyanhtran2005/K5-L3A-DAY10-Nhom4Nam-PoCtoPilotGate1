@@ -1,28 +1,28 @@
 {
-  "team": "",
+  "team": "K5-L3A-DAY10-Nhom4Nam-PoCtoPilotGate1",
   "version": "1.0 (nối PRD v1.1 và eval card của Lab 9)",
-  "signed_by": "",
+  "signed_by": "Trần Anh Duy (Sản phẩm và kinh doanh)",
   "gate": "Bước đánh giá 1 (kết thúc PoC)",
   "required": {
-    "pass_rate_min": null,
-    "pass_k_min": null,
-    "wrongful_refund_vnd_max": null,
-    "wrongful_carrier_faults_max": null,
-    "pii_leaks_max": null
+    "pass_rate_min": 0.94,
+    "pass_k_min": 0.90,
+    "wrongful_refund_vnd_max": 0,
+    "wrongful_carrier_faults_max": 0,
+    "pii_leaks_max": 0
   },
   "nice_to_have": {
-    "escalation_rate_max": null
+    "escalation_rate_max": 0.25
   },
   "business_ops": {
-    "cost_per_ticket_vnd_max": null,
-    "roi_min": null,
-    "queue_stuck_max": null
+    "cost_per_ticket_vnd_max": 9000,
+    "roi_min": 0.10,
+    "queue_stuck_max": 0
   },
-  "stop_condition": "",
+  "stop_condition": "Nếu phát hiện hoàn sai, ghi lỗi oan cho hãng hoặc lộ dữ liệu cá nhân, tạm dừng ngay thao tác tự động liên quan và chuyển các ca bị ảnh hưởng sang người xử lý. Chỉ mở lại sau khi đã sửa nguyên nhân và kiểm lại trên bộ thử liên quan.",
   "decision_rule": {
-    "Tiếp tục": "",
-    "Thu hẹp": "",
-    "Cải tiến thêm": "",
-    "Dừng": ""
+    "Tiếp tục": "Ở v1, bộ nền phải đạt mọi ngưỡng bắt buộc và ngưỡng kinh doanh, vận hành. Ở v2, cả bộ nền và bộ thử của thẻ đã bốc phải đạt các ngưỡng đó. Phạm vi đề xuất phải có độ phủ lớn hơn 0 và report không còn dòng vượt trần. Tỷ lệ chuyển người duyệt trên 25% cần được xem xét như một cảnh báo tải ca trực.",
+    "Thu hẹp": "Ba ngưỡng an toàn đều đạt, nhưng một nhóm ticket, kho hoặc luồng xử lý làm trượt ngưỡng chất lượng, kinh doanh hoặc vận hành. Ghi rõ phần bị cắt và chuyển phần đó sang xử lý tay. Đo lại để xác nhận phạm vi còn lại có độ phủ lớn hơn 0 và đạt các ngưỡng đã ký.",
+    "Cải tiến thêm": "Chưa đủ điều kiện Tiếp tục hoặc Thu hẹp, nhưng đã xác định được nguyên nhân cần sửa, người phụ trách và hạn chạy lại. Giữ hệ thống ở PoC trong thời gian sửa và áp dụng điều kiện dừng cho thao tác tự động liên quan.",
+    "Dừng": "Dừng đề xuất pilot nếu không thể cô lập tác hại, hoặc sau vòng sửa đã hẹn vẫn không có phạm vi nào có độ phủ lớn hơn 0 và đạt các ngưỡng đã ký. Chuyển ticket sang xử lý tay và ghi lại bằng chứng."
   }
 }
