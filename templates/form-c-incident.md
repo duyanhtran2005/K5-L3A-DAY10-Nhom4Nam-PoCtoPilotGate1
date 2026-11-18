@@ -1,6 +1,6 @@
 # Phiếu C · Sự cố và quyết định v2 · Khối 3 (phút 125–200)
 
-**Bàn:** ______ · **Thẻ đã bốc:** ___ *(để trống tới phút 125; bốc số xong thì ghi đúng số đó, ví dụ `S3`. Lab Coach đối chiếu với sổ; lệnh tự kiểm tra in dòng này trong report.)*
+**Bàn:** ______ · **Thẻ đã bốc:** S6 *(để trống tới phút 125; bốc số xong thì ghi đúng số đó, ví dụ `S3`. Lab Coach đối chiếu với sổ; lệnh tự kiểm tra in dòng này trong report.)*
 
 Mở `incidents/Sx/card.md` của đúng số đã bốc. Các bước trên thẻ trỏ về đúng mục trong phiếu này. Mục C3 chỉ điền phần ứng với
 số thẻ của bàn; các phần khác để trống.
@@ -82,7 +82,7 @@ người chịu hại thường là bên thứ ba). Định nghĩa đầy đủ 
 
 | # | Lỗi: người ta thấy gì (dán dòng trace / sổ cái) | Ai gặp, ai chịu | Hệ trọng (thấp / cao) | Loại lỗi (giới hạn hệ thống / ngữ cảnh / chìm) |
 |---|---|---|---|---|
-| 1 | | | | |
+| 1 | `S6-20@11`, prepared. Dòng 02 cho thấy GHSH trễ 3 ngày, VNX trễ 5 ngày. Ticket thiếu mã kiện. Dòng 05 vẫn hoàn 26.000đ, dòng 08 ghi lỗi VNX cho kiện `O-2620-P2`. Nhãn yêu cầu chuyển người. | Hãng VNX hoặc tài xế bị quy lỗi khi chưa xác định đúng kiện. LogiX chịu khoản hoàn sai. | Cao | Lỗi chìm |
 | 2 | | | | |
 | 3 | | | | |
 
@@ -90,19 +90,19 @@ người chịu hại thường là bên thứ ba). Định nghĩa đầy đủ 
 
 | Câu hỏi | Lỗi 1 | Lỗi 2 | Lỗi 3 |
 |---|---|---|---|
-| **Đầu vào:** hệ thống có tự diễn giải / sửa đầu vào của người dùng theo cách họ không lường? Có đặt sai trọng số cho một lời nói hay tín hiệu của người dùng? | | | |
-| **Độ liên quan:** hệ thống có thiếu dữ liệu cần để quyết đúng? Dữ liệu vào có nhiễu, thiếu ổn định? | | | |
-| **Thứ bậc hệ thống:** có hai hệ thống cùng ghi / cùng theo dõi một thứ mà không rõ bên nào là chủ (ví dụ CSKH hoàn tay và trợ lý cùng ghi sổ)? | | | |
-| **Trạng thái hỏng:** nhiều lỗi cộng lại có làm tính năng không dùng được (ví dụ LLM lỗi liên tiếp)? | | | |
+| **Đầu vào:** hệ thống có tự diễn giải / sửa đầu vào của người dùng theo cách họ không lường? Có đặt sai trọng số cho một lời nói hay tín hiệu của người dùng? | Có. Hệ thống dùng kiện trễ nhất làm đại diện dù yêu cầu không nêu kiện nào. | | |
+| **Độ liên quan:** hệ thống có thiếu dữ liệu cần để quyết đúng? Dữ liệu vào có nhiễu, thiếu ổn định? | Có. Ticket thiếu `parcel_id` và tracking có hai kiện từ hai hãng cùng trễ. | | |
+| **Thứ bậc hệ thống:** có hai hệ thống cùng ghi / cùng theo dõi một thứ mà không rõ bên nào là chủ (ví dụ CSKH hoàn tay và trợ lý cùng ghi sổ)? | Trace không cho thấy có bên thứ hai cùng ghi. | | |
+| **Trạng thái hỏng:** nhiều lỗi cộng lại có làm tính năng không dùng được (ví dụ LLM lỗi liên tiếp)? | Luồng vẫn chạy tới bước ghi tiền và lỗi hãng. | | |
 
 ### Phần 3 · Hướng xử lý (mỗi lỗi một ô)
 
 | | Lỗi 1 | Lỗi 2 | Lỗi 3 |
 |---|---|---|---|
-| Vì sao người gặp coi đây là lỗi | | | |
-| Kiểu giải pháp: phản hồi cho người dùng / trao quyền kiểm soát cho người / khác | | | |
-| Đường đi của người sau khi có giải pháp (ví dụ: ticket chuyển sang người duyệt → duyệt → khách được trả lời) | | | |
-| Hệ thống học được gì (tín hiệu ghi lại để theo dõi: tên metric trong `monitors.py`) | | | |
+| Vì sao người gặp coi đây là lỗi | Độ trễ cấp đơn không xác định được kiện khách muốn khiếu nại. VNX bị ghi lỗi dù thiếu căn cứ quy trách nhiệm. | | |
+| Kiểu giải pháp: phản hồi cho người dùng / trao quyền kiểm soát cho người / khác | Chuyển quyền quyết định cho người duyệt qua `pre_guard`. | | |
+| Đường đi của người sau khi có giải pháp (ví dụ: ticket chuyển sang người duyệt → duyệt → khách được trả lời) | Hỏi lại mã kiện hoặc đối chiếu tracking rồi mới quyết định hoàn tiền và ghi lỗi. | | |
+| Hệ thống học được gì (tín hiệu ghi lại để theo dõi: tên metric trong `monitors.py`) | Tín hiệu `parcel_identity_required` ghi nhận ca đơn nhiều kiện thiếu mã kiện để vận hành kiểm lại luồng chuyển người. | | |
 
 Yêu cầu: ít nhất **hai lỗi có nguồn khác nhau** ở phần 2, và ít nhất một lỗi được xếp đúng là **lỗi chìm**.
 
@@ -263,7 +263,7 @@ Vì sao có thể sai: …
 
 <a id="c6"></a>
 
-## C6 · Câu 3.4 · Fault tree TRƯỚC khi sửa (mã lần chạy: `__________`)
+## C6 · Câu 3.4 · Fault tree TRƯỚC khi sửa (mã lần chạy: `R-S6-grade-20261118-164426-d166e5`)
 
 **Khung tư duy.** Đi từ **tác hại** ngược về nguyên nhân, không đi từ lỗi mình tình cờ thấy. Mỗi tầng hỏi "điều gì phải xảy
 ra thì điều trên mới xảy ra", nối bằng **HOẶC** (một trong các nhánh là đủ) hoặc **VÀ** (phải đồng thời). Một biện pháp tốt
@@ -277,22 +277,40 @@ thường biến một nhánh HOẶC thành VÀ: tác hại chỉ còn xảy ra 
 
 Ít nhất hai nhánh ở hai tầng khác nhau (kỹ thuật, kinh doanh, con người); mỗi lá có bằng chứng (ticket@seed, trường dữ liệu, hoặc một dòng của report).
 
-```
-[ĐỈNH] Tác hại: ______________________________ (cho ai: __________, đo bằng: __________)
+```text
+[ĐỈNH] Hãng/tài xế bị ghi lỗi oan hoặc vượt quyền tự động
+        (nguy cơ trừ thưởng theo thẻ; mô phỏng đo bản ghi lỗi, không có tiền thưởng)
  └─ HOẶC
- ├─ [1] ______________________________ tầng: đầu vào / data / hành động / quyền hạn / vận hành / kinh doanh
- │ └─ vì: ________________________ bằng chứng: ticket ______@seed ____
- ├─ [2] ______________________________ tầng: ______
- │ └─ vì: ________________________ bằng chứng: ticket ______@seed ____
- └─ [3] ______________________________ tầng: ______
- └─ vì: ________________________ bằng chứng: ______
+    ├─ [1] Sai đơn vị quy trách nhiệm: lấy độ trễ nặng nhất của ĐƠN,
+    │       nhưng ghi lỗi cho KIỆN ĐẦU / hãng / tài xế đầu.
+    │       Tầng: mô hình dữ liệu + hành động.
+    │       Bằng chứng: S6-01@11, stage base, P1/GHSH trễ 0; P2/VNX trễ 4;
+    │       tool file_carrier_fault ghi P1/GHSH với delay_days = 4.
+    │       Nhánh này đã được guard Vĩ gửi chuẩn hóa ở stage after.
+    ├─ [2] Ticket không chỉ rõ kiện VÀ có nhiều hãng đủ điều kiện trễ,
+    │       nhưng hệ thống tự chọn kiện trễ nhất để hoàn/ghi lỗi.
+    │       Tầng: yêu cầu đầu vào + giả định chọn đối tượng chịu trách nhiệm.
+    │       Bằng chứng: S6-20@11, stage prepared (29e104d), không có parcel_id;
+    │       tracking P1/GHSH = 3, P2/VNX = 5; trace 05 hoàn 26.000đ,
+    │       06–08 guard đổi sang P2/VNX rồi ghi; nhãn yêu cầu escalated, faults=[].
+    └─ [3] Chỉ kiểm đúng/sai TỪNG KIỆN, không giới hạn số lỗi cùng HÃNG/NGÀY.
+            Tầng: quyền hạn tự động + vận hành.
+            Bằng chứng: S6-40, S6-41, S6-42@11 cùng S6-LOAT;
+            GHSH đã có 2 lỗi trước S6-42, trace 06 vẫn ghi lỗi thứ 3.
+            S6-43 tiếp tục ghi lỗi thứ 4; ops_limits cho tự động tối đa 2.
 ```
 
 | Lá | Specification bị vi phạm (phần mềm phải làm gì) | Giả định môi trường đã sai (thế giới ngoài phần mềm) |
 |---|---|---|
-| [1] | | |
-| [2] | | |
-| [3] | | |
+| [1] | Kiện/hãng/tài xế và độ trễ trong bản ghi phải cùng thuộc kiện mà ticket đề cập, không lấy hãng của kiện đầu đại diện cả đơn. | Một đơn chỉ có một kiện hoặc mọi kiện đều cùng hãng/cùng tình trạng. S6-01 có 2 hãng và 2 độ trễ khác nhau. |
+| [2] | Khi thiếu parcel_id và có nhiều hãng ứng viên đủ điều kiện, chuyển người TRƯỚC ghi tiền/lỗi; không đoán bằng max(delay). | Khách luôn chỉ rõ kiện hoặc mọi yêu cầu đều có đúng một kiện ứng viên. S6-20 không có parcel_id và cả P1/P2 đều trễ. |
+| [3] | Từ lỗi tự động thứ 3 của cùng hãng/ngày phải dừng ghi tự động/chuyển người theo ops_limits, vẫn giữ đường xử lý quyền lợi hợp lệ. | Xét từng ticket độc lập là đủ, hoặc hãng không bị nhiều lỗi trong cùng ngày. S6-40…43 dùng chung scenario và sổ lỗi theo seed. |
+
+**Bằng chứng prepared của Tính:** chạy `python -m lab10.trace --suite S6 --stage prepared --ticket S6-20 --seed 11` từ commit Git `29e104d`. Checkpoint `ec3a692b` và khóa tiêu chí đều khớp. Dòng 05 ghi hoàn 26.000đ, dòng 08 ghi lỗi VNX cho O-2620-P2, và kết quả là `HỎNG`. Nhãn yêu cầu chuyển người, không ghi tiền và không ghi lỗi hãng. Mã grade trước sửa `R-S6-grade-20261118-172418-d298f2` do Vĩ xác nhận; số ở dòng tiêu đề C6 là báo cáo kỹ thuật cũ của Tính.
+Phân công S6: Vĩ nhận [3] S6-42@11; Tính nhận [2] S6-20@11.
+Ca của Tính cần xác minh chuyển người trước lệnh ghi tiền hoặc ghi lỗi khi ticket thiếu mã kiện và có nhiều hãng cùng trễ.
+Dữ liệu S6 chỉ có đơn → danh sách kiện → hãng/tài xế; chưa có bảng chặng độc lập, không suy diễn lỗi theo chặng.
+Bản ghi mô phỏng là bằng chứng quy lỗi; số tiền thưởng tài xế bị trừ không được mô phỏng trong data.
 
 **Ví dụ mẫu một nhánh (bộ nền, đừng chép):** đỉnh "hãng VNX nhận lỗi oan cho đơn O-1002" ← [1] agent dùng độ trễ 5 ngày ←
 model lấy số trong ticket đè lên DB (`T-002@55`). Spec bị vi phạm: độ trễ dùng để ghi lỗi phải lấy từ tracking DB. Giả định
@@ -330,38 +348,45 @@ Thẻ S5 dùng mục này cho một con số kinh doanh: chi phí mỗi ticket t
 
 | | Chỉ số theo dõi mới của bàn |
 |---|---|
-| **Tên trong `MONITORS`** | |
-| **Bước / hành vi được đo** | |
-| **Thước đo** (một câu, có đơn vị) | |
-| **Dữ liệu** (trường nào của trial, không có nhãn) | |
-| **Cách tính** (công thức, mẫu số, cách xử lý ca thiếu dữ liệu) | |
-| **Khung thời gian / ngưỡng báo động** | |
-| **Điểm mù** (chỉ số này KHÔNG thấy gì) | |
-| Giá trị trên bộ nền · trên thẻ (đọc mục `monitor` của report) | |
+| **Tên trong `MONITORS`** | `max_daily_carrier_faults`; đã thêm hàm và đăng ký trong lab10/monitors.py. |
+| **Bước / hành vi được đo** | Số bản ghi lỗi hãng mà trợ lý đã tạo, cộng theo hãng và ngày mô phỏng; phát hiện việc ghi dồn lỗi vượt quyền tự động. |
+| **Thước đo** (một câu, có đơn vị) | Số lỗi lớn nhất của một hãng trong một ngày/seed, đơn vị bản ghi lỗi/hãng/ngày. Đây là max, không phải tổng qua 5 seed hay tỷ lệ %. |
+| **Dữ liệu** (trường nào của trial, không có nhãn) | Monitor view chỉ dùng trial.day, trial.seed, trial.faults[].carrier_id. day là scenario chung của một world/ngày; faults là các dòng lỗi của riêng ticket (được lab chiếu từ fault_rows). Không đọc label, pass, kind hoặc cause. |
+| **Cách tính** (công thức, mẫu số, cách xử lý ca thiếu dữ liệu) | C(d,s,h) = tổng số dòng faults có carrier_id = h trên các trial cùng day=d và seed=s. Giá trị = max C(d,s,h), mặc định 0 khi không có lỗi; không có mẫu số. Không gộp 5 seed hoặc các scenario khác nhau. Dòng lỗi thiếu day/seed/carrier_id gây ValueError, bộ chạy hiển thị ERROR thay vì coi là 0 an toàn. Danh sách trial rỗng trả 0 nhưng phải ghi thiếu độ phủ, không coi là bằng chứng đạt. |
+| **Khung thời gian / ngưỡng báo động** | Một ngày mô phỏng, từng seed riêng. Đỏ khi > 2 bản ghi/hãng/ngày, lấy từ data/world.json → ops_limits.max_auto_strikes_per_carrier_per_day = 2. Đề xuất báo người chịu trách nhiệm theo runbook và ngừng tự động ghi lỗi tiếp cho hãng để người có thẩm quyền duyệt; Bản v2 kiểm tra trần trước file_carrier_fault. Hàm monitor chỉ trả số, chưa tự gửi thông báo/tắt tool; người nhận/kênh báo còn chờ nhóm chốt. |
+| **Điểm mù** (chỉ số này KHÔNG thấy gì) | Không biết từng lỗi có oan hay đúng, không bắt S6-20 khi mỗi hãng mới 1 lỗi, không kiểm tiền hoàn/PII. Chỉ thấy các bản ghi được cung cấp, có thể hụt nếu thiếu event/ngoài phạm vi hoặc chia sai day. Không phân biệt ngoại lệ được người duyệt cho phép nếu log lỗi không có metadata đó; có thể báo thận trọng. Báo sau khi lỗi thứ 3 đã ghi, không thay thế cổng phòng ngừa trước ghi. |
+| Giá trị trên bộ nền · trên thẻ (đọc mục `monitor` của report) | Bộ nền 1.0. S6 base 4.0, prepared 4.0, after 2.0. Run after `R-S6-after-20261118-224737-cd4e5a`. Ngưỡng đỏ > 2 nên S6 after vừa chạm trần. |
 
 ---
 
+**Bằng chứng kiểm monitor:** grade `R-S6-grade-20261118-224736-cd4e5a` dùng commit cổng `60b84e5` và các file integrity từ `main` ở `2f5dced` trong worktree kiểm thử. Hash code `cd4e5a0124cf` khớp report Vĩ gửi. Integrity, tiêu chí, bộ công khai, regression và monitor đều đạt. Kết quả `PASS-VISIBLE`. Chưa chạy test ẩn.
+
 <a id="c9"></a>
 
-## C9 · Câu 3.7 · Fault tree SAU khi sửa (mã lần chạy: `__________`)
+## C9 · Câu 3.7 · Fault tree SAU khi sửa (mã lần chạy: `R-S6-grade-20261118-224736-cd4e5a`)
 
 Vẽ lại cây ở C6. Ở mỗi nhánh đã xử lý, thêm một nút `VÀ [gate … hỏng]` và ghi:
 
-```
-[ĐỈNH] ______________________________
+```text
+[ĐỈNH] Hãng hoặc tài xế bị ghi lỗi oan hoặc vượt quyền tự động
  └─ HOẶC
- ├─ [1] ______________ VÀ [gate ______ hỏng]
- ├─ [2] ______________ VÀ [gate ______ hỏng]
- └─ [3] ______________ (còn hở?)
+    ├─ [1] Agent chọn sai hãng hoặc kiện từ thông tin cấp đơn
+    │       VÀ cổng chuẩn hóa theo kiện hỏng hoặc bị bỏ qua.
+    ├─ [2] Ticket thiếu mã kiện, hệ thống suy đoán kiện chịu trách nhiệm
+    │       VÀ cổng parcel_identity_required không chuyển người trước ghi.
+    └─ [3] Hãng đã chạm trần lỗi tự động trong ngày
+            VÀ cổng carrier_fault_daily_limit vẫn cho ghi thêm lỗi.
 ```
 
 | Nhánh | Gate (hàm trong `guards.py` / khoá config / metric trong `monitors.py`) | Tầng gate (phát hiện / chặn / giới hạn thiệt hại / vận hành) | Giảm hay ngăn? Vì sao | Nhánh còn hở |
 |---|---|---|---|---|
-| [1] | | | | |
-| [2] | | | | |
-| [3] | | | | |
+| [1] | `write_gate` chuẩn hóa kiện và hãng trước `file_carrier_fault`. | Chặn trước ghi. | Ngăn ghi nhầm hãng đầu đơn khi định danh kiện và tracking đúng. | Định danh hoặc tracking nguồn sai vẫn có thể dẫn tới quy lỗi sai. |
+| [2] | `pre_guard` với tín hiệu `parcel_identity_required`. | Chuyển người trước ghi. | `S6-20@11`: dòng 01 phát hiện đơn hai kiện, dòng 02 `action: escalate`, dòng 03 kết thúc `escalated`, số tiền 0. SỔ CÁI, LỖI HÃNG và GỬI HÃNG đều `[]`. | Người duyệt vẫn cần xác nhận kiện thực tế và xử lý yêu cầu. |
+| [3] | `carrier_fault_daily_limit` chặn ghi bổ sung. `max_daily_carrier_faults` theo dõi số lỗi đã ghi. | Giới hạn thiệt hại và phát hiện. | `S6-42@11` giữ khoản hoàn 22.000đ. Khi GHSH có `recorded: 2, limit: 2`, cổng từ chối `file_carrier_fault`. LỖI HÃNG và GỬI HÃNG đều rỗng. | Vận hành còn phải chốt người nhận cảnh báo và quy trình đối soát khi chạm trần. |
 
 ---
+
+Trace sau sửa của hai ca nằm dưới `runs/R-S6-after-20261118-224737-cd4e5a/traces/`. Report ghép kiểm thử `R-S6-grade-20261118-224736-cd4e5a` xác nhận bộ S6 công khai đạt 100%, hoàn sai 0đ và lỗi hãng oan 0.
 
 <a id="c10"></a>
 
