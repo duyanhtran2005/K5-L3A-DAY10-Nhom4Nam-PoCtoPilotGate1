@@ -19,7 +19,31 @@ def escalation_rate(trials):
     return sum(t["status"] == "escalated" for t in trials) / max(1, len(trials))
 
 
+def max_daily_carrier_faults(trials):
+    """Largest count of recorded carrier faults in one day/seed/carrier group.
+
+    Uses the unlabeled monitor view only. Missing grouping data on a fault is
+    an error, rather than a zero that could silently suppress an alert.
+    """
+    counts = {}
+    for trial in trials:
+        faults = trial.get("faults", [])
+        if not faults:
+            continue
+        day, seed = trial.get("day"), trial.get("seed")
+        if day is None or seed is None:
+            raise ValueError("carrier faults require day and seed")
+        for fault in faults:
+            carrier = fault.get("carrier_id")
+            if not carrier:
+                raise ValueError("carrier fault requires carrier_id")
+            key = (day, seed, carrier)
+            counts[key] = counts.get(key, 0) + 1
+    return max(counts.values(), default=0)
+
+
 MONITORS = {
+    "max_daily_carrier_faults": max_daily_carrier_faults,
     "escalation_rate": escalation_rate,     # có sẵn; KHÔNG tính là metric mới của đội
 }
 STARTER_MONITORS = ("escalation_rate",)

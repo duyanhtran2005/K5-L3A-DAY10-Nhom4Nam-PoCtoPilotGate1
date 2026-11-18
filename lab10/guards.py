@@ -37,6 +37,14 @@ def pre_guard(ctx):
     policy = H.effective_policy(ctx.tools.lookup_policies(), ctx.as_of)
     if policy is None:
         return Verdict.escalate("không xác định được policy hiệu lực theo ngày xử lý")
+    order = ctx.tools.lookup_order(ctx.ticket.get("order_id"))
+    # A generic late-delivery claim cannot safely identify one parcel of a split order.
+    # Escalate before any write; do not silently select the most delayed parcel.
+    if (order is not None and not ctx.ticket.get("parcel_id")
+            and len(order.get("parcels", [])) > 1):
+        ctx.log("parcel_identity_required", order_id=order["order_id"],
+                parcel_count=len(order["parcels"]))
+        return Verdict.escalate("đơn nhiều kiện nhưng ticket không xác định kiện liên quan: chuyển người duyệt trước khi ghi")
     # Agent mặc định đọc index_active; ghim policy hiệu lực để index cũ không đổi kết quả.
     return Verdict.allow(policy_id=policy["policy_id"])
 
@@ -91,6 +99,13 @@ def write_gate(ctx, action):
             "driver_id": parcel.get("driver_id"),
             "delay_days": delay_days,
         }
+        max_auto = ctx.tools.ops_limits().get("max_auto_strikes_per_carrier_per_day")
+        recorded = ctx.tools.fault_rows(carrier_id=expected["carrier_id"])
+        if max_auto is not None and len(recorded) >= max_auto:
+            ctx.log("carrier_fault_daily_limit", carrier_id=expected["carrier_id"],
+                    recorded=len(recorded), limit=max_auto)
+            return Verdict.deny("đã chạm trần lỗi hãng tự động trong ngày: giữ hoàn tiền, chuyển đối soát hãng cho người duyệt")
+
         if any(action.get(key) != value for key, value in expected.items()):
             ctx.log("carrier_fault_source_of_truth", allowed=True, **expected)
             return Verdict.modify("chuẩn hóa kiện, hãng, tài xế và độ trễ theo tracking", **expected)
