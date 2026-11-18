@@ -43,7 +43,7 @@ Mã commit, mã lần chạy (`runs/<mã>`), dòng trong phiếu.
 
 Một điều học được, một điều còn chưa chắc.
 
-## TruongLoiVi-<MSSV-cua-Vi>
+## TruongLoiVi-2A202603441
 
 ### Phần việc phụ trách
 
