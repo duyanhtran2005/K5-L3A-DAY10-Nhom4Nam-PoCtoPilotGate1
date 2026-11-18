@@ -1,12 +1,17 @@
 {
-  "team": "",
-  "members": [],
-  "incident": "",
-  "decision_v1": "",
-  "decision_v2": "",
+  "team": "K5-L3A-DAY10-Nhom4Nam-PoCtoPilotGate1",
+  "members": [
+    "TranAnhDuy-2A202603494",
+    "TruongLoiVi-2A202603441",
+    "TranDuongTrungTinh-2A202603488",
+    "NguyenNhutLinh-2A202603492"
+  ],
+  "incident": "S6",
+  "decision_v1": "Tiếp tục",
+  "decision_v2": "Tiếp tục",
   "three_lines": {
-    "environment_assumption": "",
-    "reduce_or_prevent": "",
-    "measure_in_pilot": ""
+    "environment_assumption": "Nhóm giả định tracking có thể liên kết đúng kiện với hãng, tài xế và nguyên nhân giao trễ. Ngoài thực tế, các bản ghi này có thể đến muộn hoặc thiếu chứng từ bàn giao.",
+    "reduce_or_prevent": "Cổng ngăn tự ghi tiền và lỗi hãng khi chưa xác định được kiện, đồng thời ngăn ghi lỗi tự động khi hãng đã chạm trần trong ngày. Nếu tracking gán sai trách nhiệm cho một kiện đã xác định, nguy cơ ghi oan vẫn còn.",
+    "measure_in_pilot": "Trước Bước đánh giá 2, cần đo tỷ lệ quy lỗi sai theo kiện trên các ca có chứng từ bàn giao thật, cùng tỷ lệ chuyển người, thời gian chờ và số ca ùn theo từng ca trực."
   }
 }
