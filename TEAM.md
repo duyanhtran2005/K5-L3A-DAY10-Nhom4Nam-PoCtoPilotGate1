@@ -16,7 +16,7 @@ Họ tên đầy đủ và MSSV của **mọi** thành viên; thêm dòng nếu 
 |   1 |           |      |     |             |
 |   2 | Trương Lợi Vĩ | 2A202603441| Kỹ sư cổng · cổng, checkpoint, kiểm thử S6 | |
 |   3 | Trần Dương Trung Tính | 2A202603488 | Kỹ sư cổng · trace, kiểm thử, monitor | |
-|   4 |           |      |     |             |
+|   4 | Nguyễn Nhựt Linh | 2A202603492 | Vận hành và pháp lý | |
 |   5 |           |      |     |             |
 
 Ghi `members` trong `submission/submission.json` theo dạng `"HoVaTen-MSSV"`, khớp bảng trên.
@@ -96,3 +96,28 @@ Tôi là kỹ sư cổng, phụ trách đọc trace, kiểm thử và theo dõi 
 ### Exit ticket
 
 Điều rút ra là dữ liệu tracking có thể đúng nhưng vẫn chưa đủ để quy trách nhiệm khi ticket thiếu mã kiện. Cổng cần chuyển người trước khi ghi, còn monitor giúp phát hiện lỗi đã ghi vượt trần. Cần kiểm thêm tải chuyển duyệt với dữ liệu thực tế và việc cảnh báo có đến đúng người chịu trách nhiệm hay không.
+
+## NguyenNhutLinh-2A202603492
+
+### Phần việc phụ trách
+
+Tôi phụ trách Vận hành và pháp lý: Phiếu A câu 1.2 và 1.4; Phiếu B mục B4–B5, B7.5–B7.6; Phiếu C mục C3.2, C4 và C11 cho thẻ S6.
+
+### Đóng góp cụ thể
+
+- **Mục tiêu và cách đo.** Viết mục tiêu của chị Oanh về đối soát khoản hoàn với sổ cái và của chị Hạnh về tiếp nhận ca chuyển duyệt trong 60 phút. Thiết kế cách đo tỷ lệ thông báo gửi hãng có dấu hiệu chứa dữ liệu người nhận, dựa trên payload sau lọc và hồ sơ người nhận, theo cửa sổ 24 giờ.
+- **Rủi ro và runbook vòng 1.** Lập HAZOP cho `notify_carrier`, bổ sung rủi ro quá tải người duyệt và chia sẻ dữ liệu với bên thứ ba. Điền checklist 9 nhóm việc có PIC, trạng thái và nguồn bằng chứng. Viết runbook phần 1–3 và kịch bản giờ cao điểm theo cấu hình 1 người duyệt, 6 ca/giờ, SLA 60 phút và tỷ lệ kiểm mẫu 10%.
+- **Phân tích sự cố S6.** So sánh cách điều phối hãng xác minh theo kiện và chặng với cách kế toán, CSKH đối soát. Dùng trace `base` của `S6-01@11` và `S6-20@11` để chỉ ra lỗi gán trách nhiệm cho kiện đầu và rủi ro khi thiếu mã kiện. Viết HAZOP S6, đề xuất chuyển người trước khi ghi nếu thiếu căn cứ, rồi cập nhật runbook phần 4–5 theo kết quả sau sửa.
+- **Chốt và cập nhật C11 trên `main`.** Đối chiếu report cuối, ghi nhận thời gian chờ lâu nhất 0 phút và 0 ca ùn. Chạy lại `S6-01@11` ở mốc `after` trên bản khớp hash `cd4e5a0124cf`, xác nhận thông báo đi đúng VNX cho kiện `O-2601-P2` sau khi bỏ `customer_note`. Kiểm riêng hai công tắc dừng ghi lỗi và gửi hãng trong mô phỏng. Đánh dấu nhóm 8 `Xong` và giữ nhóm 7 `Chưa` vì chưa có xác nhận Tùng đã nhận được cảnh báo.
+
+**Sử dụng AI.** Tôi dùng Codex để hỗ trợ đọc repo, đối chiếu số liệu và trace, chạy kiểm thử mô phỏng công tắc và biên tập các phiếu. Tôi rà lại nội dung và bàn giao bằng chứng cho nhóm.
+
+### Bằng chứng
+
+- Câu 1.2 và 1.4 trong [Phiếu A](templates/form-a-criteria.md); B4–B5, B7.5–B7.6 trong [Phiếu B](templates/form-b-evaluation-gates.md); C3.2, C4 và C11 trong [Phiếu C](templates/form-c-incident.md).
+- Commit `306a4e6` trên nhánh `linh/s6-ops` lưu phần cập nhật Phiếu B và Phiếu C ở đợt trước.
+- Bản chốt C11 trong [Phiếu C](templates/form-c-incident.md) trên nhánh `main`, đối chiếu với report `R-S6-grade-20261118-230042-cd4e5a`, trace `S6-01@11` và [bằng chứng kiểm thử công tắc](docs/C11-S6-verification.md).
+
+### Exit ticket
+
+Tôi học được rằng đơn nhiều kiện phải được đối chiếu theo từng kiện trước khi quy trách nhiệm cho hãng hoặc tài xế. Tôi còn chưa chắc cảnh báo sẽ đến đúng người trực trong thời hạn đề xuất, vì phép thử mới xác nhận công tắc hoạt động trong mô phỏng.
