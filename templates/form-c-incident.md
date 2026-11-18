@@ -1,6 +1,6 @@
 # Phiếu C · Sự cố và quyết định v2 · Khối 3 (phút 125–200)
 
-**Bàn:** ______ · **Thẻ đã bốc:** ___ *(để trống tới phút 125; bốc số xong thì ghi đúng số đó, ví dụ `S3`. Lab Coach đối chiếu với sổ; lệnh tự kiểm tra in dòng này trong report.)*
+**Bàn:** ______ · **Thẻ đã bốc:** S6 *(để trống tới phút 125; bốc số xong thì ghi đúng số đó, ví dụ `S3`. Lab Coach đối chiếu với sổ; lệnh tự kiểm tra in dòng này trong report.)*
 
 Mở `incidents/Sx/card.md` của đúng số đã bốc. Các bước trên thẻ trỏ về đúng mục trong phiếu này. Mục C3 chỉ điền phần ứng với
 số thẻ của bàn; các phần khác để trống.
@@ -160,19 +160,23 @@ duyệt, chờ duyệt, trần).
 **Cách làm:** thảo luận theo nhóm rồi ghi cho **từng nhóm người dùng**: họ là ai, mục tiêu chính là gì, và hiện
 nay họ làm việc này **từng bước ra sao**, đồng đều hay mỗi nơi một kiểu. Dòng cuối: **hệ thống đang mang hình dung nào**, đọc từ trace.
 
-| | Nhóm A: `__________` (gợi ý: điều phối / tài xế của hãng) | Nhóm B: `__________` (gợi ý: kế toán đối soát hoặc CSKH) |
+Quy trình dưới đây là cách làm mà nhóm giả định từ thẻ S6 và vai trò trong `staff`. Cần xác nhận với người phụ trách từng bên trước pilot.
+
+| | Nhóm A: Điều phối hãng và tài xế | Nhóm B: Kế toán đối soát và CSKH của LogiX |
 |---|---|---|
-| Họ là ai, chạm vào kết quả của trợ lý ở đâu | | |
-| Mục tiêu chính của họ | | |
-| Hiện nay họ xác định "ai chịu lỗi giao trễ" theo các bước nào | | |
-| Cách làm đó đồng đều hay mỗi nơi một kiểu | | |
-| Theo hình dung của họ, **đơn vị chịu lỗi** là gì (đơn / kiện / chặng / tài xế)? | | |
+| Họ là ai, chạm vào kết quả của trợ lý ở đâu | Điều phối hãng nhận thông báo lỗi theo kiện. Tài xế có thể bị tính vào số vi phạm và bị trừ thưởng, như phản ánh của Sông Hồng trong thẻ. | Trần Thị Hạnh (NV-HANH) nhận khiếu nại và điều phối xác minh. Phạm Kiều Oanh (NV-OANH) đối chiếu bản ghi lỗi và khoản điều chỉnh với hãng hoặc shop. |
+| Mục tiêu chính của họ | Xác định đúng kiện, đúng chặng gây trễ để hãng và tài xế khác không bị tính lỗi. | Xử lý khiếu nại đúng hạn, giải thích được căn cứ và đối soát đúng bên chịu khoản điều chỉnh. |
+| Hiện nay họ xác định "ai chịu lỗi giao trễ" theo các bước nào | 1. Xác nhận mã vận đơn hoặc mã kiện. 2. So hẹn giao với các mốc nhận, bàn giao và giao thực tế. 3. Xác định chặng trễ, nguyên nhân và bên phụ trách chặng đó. 4. Kiểm chứng từ bàn giao trước khi gắn trách nhiệm cho hãng hoặc tài xế. | 1. Tra ticket và đơn rồi xác định kiện mà khách khiếu nại. 2. So tracking, nguyên nhân và chính sách có hiệu lực. 3. Nếu thiếu căn cứ, hỏi khách hoặc điều phối hãng và đánh dấu chờ xác minh. 4. Khi có căn cứ, đối chiếu bản ghi lỗi với sổ và sửa khoản ghi nhầm nếu có. |
+| Cách làm đó đồng đều hay mỗi nơi một kiểu | Cùng cần mã kiện và mốc bàn giao. Cách lưu chứng từ, chi tiết theo chặng và cách ghi nguyên nhân có thể khác giữa các hãng. | CSKH bắt đầu từ khiếu nại, kế toán bắt đầu từ bản ghi hoặc khoản chênh lệch. Cả hai cần liên kết được đơn với đúng kiện và căn cứ quy lỗi. |
+| Theo hình dung của họ, **đơn vị chịu lỗi** là gì (đơn / kiện / chặng / tài xế)? | **Kiện và chặng** là đơn vị xác minh. Chỉ quy trách nhiệm cho hãng hoặc tài xế khi có chứng cứ họ phụ trách và gây chậm ở chặng đó. | **Đơn** để tra hồ sơ và đối soát, **kiện** để xác định phạm vi quy lỗi, và **chặng** để xác minh bên chịu trách nhiệm khi cần. |
 
 **Hệ thống đang mang hình dung nào?** (đọc trace một ticket hỏng: `tracking.parcels` so với dòng `file_carrier_fault`)
 
-- Với hệ thống, đơn vị chịu lỗi là: `__________`. Bằng chứng: ticket `______@seed ____`, dòng trace: `__________`.
-- Chỗ hai hình dung vênh nhau: `__________`.
-- Khi đầu vào không đủ để áp hình dung của con người (không biết kiện nào), hệ thống đang làm gì: `__________`; nên làm gì: `__________`.
+- **Hệ thống quyết định ở cấp đơn, rồi ghi trách nhiệm theo kiện đầu.** Theo `lab10/agent.py`, hệ thống lấy độ trễ/nguyên nhân từ kiện trễ nhất rồi lấy `parcel_id`, `carrier_id` và `driver_id` của `parcels[0]` khi ghi lỗi. Ở trace `S6-01@11` (mốc `base`), dòng **02** cho thấy `O-2601-P2/VNX` trễ 4 ngày và `O-2601-P1/GHSH` đúng hẹn. Dòng **06** vẫn ghi 4 ngày trễ cho `O-2601-P1/GHSH/TX-GHSH-06`. Dòng **07** ghi nhận thông báo gửi GHSH trong mô phỏng.
+- **Chỗ vênh:** Điều phối và đối soát cần chứng cứ của đúng kiện và chặng. Hệ thống đã ghép độ trễ từ kiện này với hãng và tài xế của kiện khác, dù ticket `S6-01` đã chỉ rõ kiện thứ hai.
+- **Khi thiếu mã kiện:** `S6-20@11` (mốc `base`) không có `parcel_id`. Dòng **02** cho thấy hai kiện của hai hãng trễ 3 và 5 ngày, nhưng dòng **06** ghi cho kiện đầu `O-2620-P1/GHSH/TX-GHSH-04` với 5 ngày trễ. Dòng **05** cũng cho thấy ca đã được tự hoàn trước khi ghi lỗi. Với ca mơ hồ như vậy, nên chuyển Hạnh xác minh **trước các thao tác ghi tự động**. Chỉ ghi lỗi và báo hãng khi mã kiện, nguyên nhân và bên chịu trách nhiệm đã khớp với bằng chứng.
+- **Đối chiếu mốc `after` trung gian do Tính bàn giao:** `S6-01@11` được chuẩn hóa về đúng kiện `O-2601-P2/VNX` và đạt theo báo cáo của Tính. `S6-20@11` vẫn hỏng: dòng **05** hoàn 26.000đ, dòng **06–08** đổi sang và ghi lỗi cho kiện trễ nhất `O-2620-P2/VNX/TX-VNX-05`, dù khách chưa xác định kiện. Cổng đã thống nhất kiện/hãng/tài xế trong bản ghi nhưng chưa giải quyết việc chọn kiện nào khi đầu vào mơ hồ. Bằng chứng thuộc bản Tính chạy (`guards.py` có SHA-256 bắt đầu bằng `d88eab51`), chưa phải mốc `prepared` hay bản S6 sau khi sửa xong. [Bàn giao của Tính](../docs/GUI_DUY_VI_S6.md).
+- **Bản sửa `60b84e5` trên `vi/round1-s6` (mốc `after` theo Vĩ):** trace [`S6-20@11`](../docs/S6-20@11.json) cho thấy `pre_guard` chuyển người ngay khi đơn có hai kiện nhưng ticket thiếu định danh. Không có sự kiện gọi tool ghi, và `ledger`, `fault_rows`, `outbound` đều rỗng. Kết quả khớp bàn giao của Vĩ cho lần chạy `R-S6-after-20261118-172821-cd4e5a`.
 
 → Mỗi chỗ vênh là một nhánh của fault tree. Gate tốt làm cho hệ thống hành xử theo hình dung của người chịu hậu quả.
 
@@ -231,13 +235,14 @@ Mở lại Phiếu B mục B3. Ghi ở đây những dòng đổi so với vòng
 
 *Mục riêng, không ghi đè HAZOP vòng 1 ở Phiếu B mục B4. Năm guideword và nghĩa của chúng: xem Phiếu B mục B4.*
 
-Tool chọn phân tích: `________________`
+Tool chọn phân tích: `file_carrier_fault`
 
 | Tham số / dòng dữ liệu | Guideword (WRONG / INVALID / INCOMPLETE / PERTURBED / INCAPABLE) | Lệch cụ thể (mã ticket, trường dữ liệu của thẻ) | Hậu quả, cho ai | Hiện có gì ngăn? | Gate đề xuất + tầng |
 |---|---|---|---|---|---|
-| | | | | | |
-| | | | | | |
-| | | | | | |
+| `parcel_id`, `carrier_id`, `driver_id`, `delay_days` | WRONG | `S6-01@11` (mốc `base`), dòng 02 và 06: dùng độ trễ của `O-2601-P2/VNX` nhưng ghi lỗi cho `O-2601-P1/GHSH/TX-GHSH-06`. | Sông Hồng và tài xế giao đúng hẹn bị ghi oan. Thẻ nêu hậu quả có thể đi vào bảng thưởng. | Mốc base có tracking từng kiện nhưng đường ghi vẫn dùng kiện đầu. | Trước khi ghi, đối chiếu đúng kiện ticket nêu, rồi lấy hãng, tài xế, độ trễ và nguyên nhân từ cùng bản ghi của kiện. Nếu dữ kiện mâu thuẫn, chuyển người. **Chặn.** |
+| `ticket.parcel_id` | INCOMPLETE | `S6-20@11` (mốc `base`), dòng 02 và 06: ticket thiếu mã kiện, hai kiện ở hai hãng đều trễ nhưng hệ thống vẫn chọn kiện đầu. | Ghi lỗi và gửi thông báo khi chưa xác định được đối tượng khiếu nại. Hãng và tài xế có thể chịu hậu quả sai. | Tracking liệt kê cả hai kiện nhưng mốc base không có nhánh giữ ca khi đầu vào mơ hồ. | Khi không xác định duy nhất kiện mà khách khiếu nại, chuyển Hạnh trước thao tác ghi và yêu cầu mã kiện hoặc chứng từ. **Chặn.** |
+| `delay_cause` của kiện được khiếu nại | WRONG | **Giả thuyết từ dữ liệu S6, chưa xác nhận bằng trace:** `S6-04` chỉ đích danh `O-2604-P2/VNX`, có nguyên nhân `FORCE_MAJEURE`. Kiện khác của GHSH có `CARRIER`. Nếu lấy nguyên nhân của kiện khác thay cho kiện khách nêu, có thể biến ca bất khả kháng thành lỗi hãng. | Hãng hoặc tài xế bị ghi lỗi trong khi căn cứ của kiện đang xét không cho phép. | Host có tùy chọn kiểm nguyên nhân trên kiện được truyền vào, nhưng tùy chọn đó không tự kiểm kiện truyền vào có đúng kiện khách nêu hay không. | Xác thực đúng kiện trước, sau đó áp chính sách có hiệu lực lên nguyên nhân ghi nhận của chính kiện đó. Thiếu hoặc mâu thuẫn nguyên nhân thì chuyển người. **Chặn.** |
+| Số lượt ghi theo hãng trong ngày | INCAPABLE | **Giả thuyết ban đầu từ dữ liệu S6**, sau đó tái hiện trên bản `after` trung gian của Tính: `S6-42@11`, dòng **06**, ghi lỗi thứ 3 cho GHSH sau `S6-40` và `S6-41`; bàn giao ghi nhận `S6-43` là lỗi thứ 4. | Một loạt lỗi có thể cùng đi vào thống kê hãng và ảnh hưởng thưởng của nhiều tài xế trước khi kịp đối soát. | `ops_limits` đặt trần 2 lỗi tự động/hãng/ngày. Trace của Tính xác nhận bản trung gian vẫn ghi vượt trần. | Đếm lỗi đã ghi theo hãng và ngày. Từ lượt thứ 3, giữ việc quy lỗi cho người có thẩm quyền xác minh; khoản hoàn hợp lệ có thể tiếp tục theo cổng riêng. **Giới hạn thiệt hại.** |
 
 Bắt buộc: ít nhất ba dòng, trong đó **một dòng là nhánh bàn chưa thấy trên trace** lúc viết.
 
@@ -385,26 +390,29 @@ Ghi các dòng đổi sau sự cố. Mỗi dòng vẫn phải có một PIC có 
 
 | # nhóm | Trạng thái mới (Xong / Chưa / Không áp dụng) | Bằng chứng mới (mã lần chạy, mục phiếu, số trong report) | PIC |
 |---|---|---|---|
-| | | | |
-| | | | |
+| 1 — Chất lượng | Xong | [Grade S6](../docs/R-S6-grade-20261118-172821-cd4e5a.md): S6 after có `pass_rate = 1,0` và `pass_k = 1,0`; bộ nền after đạt 1,0, không có ca mới hỏng. Kết luận này áp dụng cho bộ kiểm công khai. Grade tổng thể vẫn FAIL ở mục integrity. | Trương Lợi Vĩ |
+| 4 — Quyền hạn | Xong | Hai trace `after` xác nhận quy tắc S6. [`S6-20@11`](../docs/S6-20@11.json) chuyển người ở `pre_guard` trước khi ghi, không hoàn, không ghi lỗi, không gửi. [`S6-42@11`](../docs/S6-42@11.json) giữ hoàn 22.000đ, sau đó từ chối `file_carrier_fault` vì GHSH đã chạm trần **2**, chỉ gửi phản hồi cho khách. Cả hai ca đều đạt. | Trương Lợi Vĩ |
+| 5 — Hiệu năng, hạ tầng | Xong | Grade S6 after xác nhận tải duyệt **25%**, với **1 người, 6 ca/giờ**, chờ lâu nhất **0 phút**, **0 ca ùn**. Monitor đạt **2 lỗi/hãng/ngày** trên S6. Đã kiểm công suất trên tải giả lập của thẻ; kịch bản cao điểm trong B7.6 vẫn là giả định. | Nhựt Linh |
+| 7 — Vận hành | Chưa | Hàng chờ trong grade S6 after nằm trong hạn **60 phút**: chờ lâu nhất **0 phút**, **0 ca ùn**. Tùng (NV-TUNG) là PIC nhận cảnh báo qua `#logix-pilot-alerts`. Còn chờ bằng chứng cảnh báo tới người trực và thao tác dừng bằng công tắc. | Nhựt Linh |
+| 8 — Con người, pháp lý | Chưa | Grade S6 after ghi **0 lỗi hãng oan**, **0 lần lộ dữ liệu cá nhân**. Hai trace `S6-20@11` và `S6-42@11` xác nhận không có thông báo gửi hãng ở các ca bị chặn. Còn cần một trace `after` của ca hợp lệ có gọi `notify_carrier` để đối chiếu payload sau lọc. | Nhựt Linh |
 
 ### Runbook 4 · Sau sự cố trên thẻ (vòng 2)
 
 | Câu hỏi | Trả lời |
 |---|---|
-| Tín hiệu nào ở Runbook 2 (Phiếu B mục B7.5) lẽ ra phải báo trước sự cố này? Nó đã có chưa? | |
-| Bàn thêm hoặc đổi ngưỡng nào, từ bao nhiêu thành bao nhiêu? | |
-| Bàn đổi gì về **người** (số người trực, ai đứng tên, ai được gọi)? | |
-| Bàn đổi gì về **phạm vi** hoặc **quy trình** (kiểm mẫu, ghi chú giải thích, trần)? | |
-| Nói gì với bên thứ ba bị ảnh hưởng (hãng, shop, người nhận, nhân viên duyệt), ai nói, trong bao lâu? | |
-| Dữ liệu cá nhân nào đã rời hệ thống mà không thu hồi được? Báo cho ai? | |
-| Sự cố lộ ra trước qua số máy đo, phản hồi của người, hay đọc nội dung? Nguồn nào bàn chưa có? | |
+| Tín hiệu nào ở Runbook 2 (Phiếu B mục B7.5) lẽ ra phải báo trước sự cố này? Nó đã có chưa? | B7.5 có `wrongful_carrier_faults`, dùng nhãn để phát hiện lỗi đã ghi. Tính bàn giao monitor không nhãn `max_daily_carrier_faults`: ngưỡng đỏ trên **2 lỗi/hãng/ngày**. S6 đo **4** ở bản trung gian, **2** ở bản sửa theo Vĩ. Khi nhận cảnh báo qua `#logix-pilot-alerts`, Tùng dừng quyền tự ghi lỗi tiếp và chuyển người kiểm. Monitor phát hiện sau ghi. Cổng kiểm đúng kiện/hãng, đủ căn cứ và trần theo hãng để chặn trước. |
+| Bàn thêm hoặc đổi ngưỡng nào, từ bao nhiêu thành bao nhiêu? | Giữ ngưỡng đỏ **1 lỗi ghi oan đã xác nhận**. Thêm quy tắc từ chưa có ngưỡng sang **0 lượt tự ghi khi thiếu hoặc mâu thuẫn căn cứ**. Ngay từ 1 yêu cầu như vậy, giữ ca và chuyển Hạnh. Giữ trần **2 lỗi tự động/hãng/ngày** theo `ops_limits`. Lượt thứ 3 cần người có thẩm quyền kiểm trước khi ghi. |
+| Bàn đổi gì về **người** (số người trực, ai đứng tên, ai được gọi)? | Đề xuất giữ **1 người duyệt mặc định** cho tới khi thấy tải sau sửa. **Hạnh (NV-HANH)** nhận và phân loại ca cần xác minh, nhờ điều phối hãng cung cấp chứng cứ. **Tùng (NV-TUNG)** giữ công tắc và điều phối tăng viện. **Oanh (NV-OANH)** đối soát bản ghi và các khoản điều chỉnh. |
+| Bàn đổi gì về **phạm vi** hoặc **quy trình** (kiểm mẫu, ghi chú giải thích, trần)? | Đề xuất xử lý tay các ca nhiều kiện chưa xác định được kiện liên quan, giữ luồng tự động cho ca có căn cứ. Ghi mã ticket, mã đơn, mã kiện nếu có, căn cứ tracking và lý do chuyển. Hạnh ưu tiên ca sắp vượt 60 phút. Nếu đã ghi oan, Tùng tắt `file_carrier_fault` và `notify_carrier` trong 5 phút từ tín hiệu đỏ theo B7.5, rồi đối chiếu các bản ghi cùng hãng trước khi bật lại. |
+| Nói gì với bên thứ ba bị ảnh hưởng (hãng, shop, người nhận, nhân viên duyệt), ai nói, trong bao lâu? | Đề xuất **Hạnh** liên hệ điều phối Sông Hồng **trong 60 phút kể từ khi xác nhận nghi vấn**, cung cấp mã kiện và bản ghi cần đối chiếu, đề nghị tạm giữ khoản trừ liên quan trong lúc xác minh. **Oanh** rà khoản đã trừ và phối hợp sửa sổ, đề nghị hãng điều chỉnh thưởng nếu xác nhận ghi oan. Chỉ báo shop hoặc bên khác khi hồ sơ cho thấy họ bị ảnh hưởng. |
+| Dữ liệu cá nhân nào đã rời hệ thống mà không thu hồi được? Báo cho ai? | Trace `S6-01@11` và `S6-20@11`, dòng 07, cho thấy mock gửi mã đơn, mã kiện, quận/huyện và ghi chú khách cho GHSH. Hai payload này không cho thấy tên, số điện thoại hay địa chỉ đường. Chưa có nhật ký gửi thật để xác nhận dữ liệu cá nhân đã ra ngoài. Nếu phát hiện có, báo **Tùng** và đầu mối phụ trách dữ liệu của LogiX, lưu mã gửi để điều tra. |
+| Sự cố lộ ra trước qua số máy đo, phản hồi của người, hay đọc nội dung? Nguồn nào bàn chưa có? | Theo thẻ, sự cố lộ qua phản ánh của trưởng nhóm tài xế Sông Hồng. Trace base và [trace after trung gian của Tính](../docs/GUI_DUY_VI_S6.md) giải thích hai kiểu lỗi. [Grade bản sửa](../docs/R-S6-grade-20261118-172821-cd4e5a.md) có số đo ba mốc. Hai trace mới xác nhận ca bị chặn không gửi hãng. Còn cần kiểm ca có gửi hãng hợp lệ và diễn tập cảnh báo/công tắc. Lab không có chứng từ bàn giao thật hay bảng thưởng để xác nhận chặng chịu trách nhiệm và số tiền đã trừ. |
 
 ### Runbook 5 · Ba kịch bản "nếu … thì …" cho tuần đầu chạy thử thật
 
-1. Nếu số ticket tăng gấp ___ lần trong một giờ thì: …
-2. Nếu nhà cung cấp LLM lỗi quá ___ phút thì: …
-3. Nếu người duyệt báo không tin một quyết định của trợ lý thì: …
+1. Nếu số ticket tăng gấp **3 lần trong một giờ**, Hạnh kiểm hàng chờ. Từ **3 ca đang chờ** hoặc ca lâu nhất chờ **30 phút**, báo Tùng gọi người dự phòng đã được cấp quyền. Nếu không đủ người và dự báo không giữ được hạn **60 phút**, Tùng thu hẹp pilot, ưu tiên ca sắp trễ và xử lý tay ca thiếu căn cứ.
+2. Nếu nhà cung cấp LLM lỗi quá **5 phút** (mốc đề xuất), Tùng chuyển sang xử lý tay và tạm dừng các thao tác ghi phụ thuộc vào đề xuất của LLM. Mọi ca chưa xác minh tiếp tục được giữ ngay từ lúc thiếu bằng chứng. Trước khi bật lại, Hạnh kiểm lại ca đang chờ, Oanh đối soát sổ để tránh ghi lại khoản đã hoàn hoặc lỗi đã lập.
+3. Nếu người duyệt báo không tin một quyết định, Hạnh giữ ca và yêu cầu đối chiếu mã kiện, mốc bàn giao, nguyên nhân và chính sách. Nếu xác nhận có ít nhất **1 lỗi ghi oan**, Tùng tắt đường ghi lỗi và thông báo hãng theo Runbook 4. Oanh rà các ca cùng kiểu và xử lý khoản điều chỉnh. Chỉ tiếp tục ca sau khi người duyệt có đủ chứng cứ.
 
 ---
 
