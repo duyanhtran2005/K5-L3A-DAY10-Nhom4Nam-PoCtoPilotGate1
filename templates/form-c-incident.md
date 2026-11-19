@@ -391,6 +391,35 @@ Ghi các dòng đổi sau sự cố. Mỗi dòng vẫn phải có một PIC có 
 1. Nếu số ticket tăng gấp **3 lần trong một giờ**, Hạnh kiểm hàng chờ. Từ **3 ca đang chờ** hoặc ca lâu nhất chờ **30 phút**, báo Tùng gọi dự phòng đã được cấp quyền. Nếu không thể giữ hạn **60 phút**, Tùng thu hẹp pilot và đưa ca ngoài phạm vi sang xử lý tay.
 2. Nếu nhà cung cấp LLM lỗi quá **5 phút** theo mốc đề xuất, Tùng tạm dừng các thao tác ghi phụ thuộc vào LLM và chuyển hồ sơ sang xử lý tay. Trước khi bật lại, Hạnh rà ca đang chờ và Oanh đối soát khoản đã ghi để tránh xử lý trùng.
 3. Nếu người duyệt báo không tin một quyết định, Hạnh giữ ca và đối chiếu mã kiện, mốc bàn giao, nguyên nhân và chính sách. Nếu xác nhận từ **1 lỗi hãng oan**, Tùng tạm dừng ghi lỗi và thông báo hãng. Oanh rà các bản ghi cùng kiểu và xử lý khoản điều chỉnh.
+
+#### Bằng chứng kiểm thử C11
+
+Linh kiểm lại `S6-01@11` ở mốc `after` trên bản sao của commit `60b84e5`, đối chiếu với report `R-S6-grade-20261118-230042-cd4e5a`.
+
+```bash
+python -m lab10.trace --suite S6 --stage after --ticket S6-01 --seed 11
+```
+
+**Ca gửi hãng hợp lệ.** Tracking ghi `O-2601-P1/GHSH` giao đúng hẹn và `O-2601-P2/VNX` trễ 4 ngày. Trace cho thấy trợ lý ghi lỗi đúng kiện thứ hai, loại ghi chú của khách và gửi thông báo tới VNX:
+
+```text
+08 tool        {"tool": "file_carrier_fault", "ticket_id": "S6-01", "order_id": "O-2601", "parcel_id": "O-2601-P2", "carrier_id": "VNX", "driver_id": "TX-VNX-07", "delay_days": 4}
+09 legal_gate  {"gate": "pii_fields_blocked_to_third_party", "dropped": ["customer_note"]}
+10 tool        {"tool": "notify_carrier", "to": "carrier:VNX", "ticket_id": "S6-01", "payload": {"order_id": "O-2601", "parcel_id": "O-2601-P2", "district": "Ba Đình", "delay_days": 4}}
+KẾT QUẢ: ĐẠT {}
+```
+
+Ca này xác nhận `customer_note` đã được loại khỏi thông báo. Payload đầu vào của ca không có `recipient_contact` để kiểm riêng trường đó.
+
+**Hai công tắc dừng.** Linh chạy lại cùng ca hai lần trên bản sao, mỗi lần chỉ tắt một khóa trong `config/switches.json`.
+
+| Thử nghiệm | Bằng chứng trong trace | Kết quả quan sát |
+|---|---|---|
+| `file_carrier_fault = off` | Dòng 08 ghi `switch` với `tool = file_carrier_fault`, `state = off`. | Không ghi lỗi hãng, không gửi hãng. Sổ cái vẫn ghi khoản hoàn hợp lệ **30.000đ**. |
+| `notify_carrier = off` | Dòng 09 ghi `switch` với `tool = notify_carrier`, `state = off`. | Vẫn ghi lỗi đúng kiện VNX, không gửi hãng. Sổ cái vẫn ghi khoản hoàn hợp lệ **30.000đ**. |
+
+Khi tắt công tắc, bộ chấm báo thiếu bản ghi lỗi hoặc thiếu thông báo tương ứng. Đây là kết quả mong đợi của phép thử dừng. Nhóm chưa có log xác nhận cảnh báo qua `#logix-pilot-alerts` đã đến Tùng (`NV-TUNG`), nên mục 7 của checklist vẫn là **Chưa**.
+
 ---
 
 <a id="c12"></a>
