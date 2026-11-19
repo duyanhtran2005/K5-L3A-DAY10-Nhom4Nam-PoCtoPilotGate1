@@ -32,10 +32,10 @@ Mọi con số trong quyết định Gate 1 phải trỏ về một dòng ở đ
 
 | # | Mã lần chạy | Bộ ticket · mốc | Đổi MỘT thứ gì so với lần trước | pass_rate (khoảng tin cậy 95%) | pass_k | Hoàn sai (đ) · lỗi hãng oan · lộ dữ liệu | Tỉ lệ chuyển người | Kết luận (một câu) |
 |---|---|---|---|---|---|---|---|---|
-| 1 | | base · base | (baseline, chưa có cổng) | | | | | |
-| 2 | | base · after | (cổng vòng 1, thử trước khi chốt) | | | | | |
-| 3 | | base · prepared | (cổng vòng 1 đã chốt) | | | | | |
-| 4 | | | | | | | | |
+| 1 | `R-base-before-20261118-163648-9c8f83` | base · base | Baseline, chưa có cổng. | 0,9909 ([0,9727; 1,0]) | 0,9545 | 20.000đ · 1 · 0 | 0,2273 | Trượt hai ngưỡng an toàn do hoàn sai và ghi lỗi hãng oan. |
+| 2 | `R-base-after-20261118-170713-d298f2` | base · after | Thử bản có ba cổng vòng 1. | 1,0 ([1,0; 1,0]) | 1,0 | 0đ · 0 · 0 | 0,2273 | Đạt 110/110 lượt, không có dòng vượt trần. |
+| 3 | `R-base-prepared-20261118-170726-d298f2` | base · prepared | Chạy trên snapshot vòng 1 `ec3a692b`. | 1,0 ([1,0; 1,0]) | 1,0 | 0đ · 0 · 0 | 0,2273 | Gate xác nhận đạt các ngưỡng bắt buộc và kinh doanh, vận hành. |
+| 4 | `R-base-prepared-20261118-171319-d298f2` | base · prepared | Đo lại bộ nền trên snapshot `ec3a692b`. Dùng lần chạy này cho B8. | 1,0 ([1,0; 1,0]) | 1,0 | 0đ · 0 · 0 | 0,2273 | Đạt các ngưỡng bắt buộc và kinh doanh, vận hành. |
 
 ---
 
@@ -48,10 +48,12 @@ python3 -m lab10.eval --suite base --stage base --note "baseline"
 python3 -m lab10.gate --run runs/<mã lần chạy>/report.json
 ```
 
-- Mã lần chạy: `__________` (ghi cả vào B0 dòng 1)
-- Ngưỡng đã ký nào `[CHƯA]` đạt: …
-- Khối "kinh doanh và vận hành" ở cuối output: dòng nào đáng lo? …
-- Khối "theo kho và hãng": kho hoặc hãng nào có số xấu nhất? …
+- Mã lần chạy: `R-base-before-20261118-163648-9c8f83` (ghi cả vào B0 dòng 1).
+- Ngưỡng đã ký nào `[CHƯA]` đạt: Tổng tiền hoàn sai 20.000đ và 1 lỗi hãng oan, trong khi cả hai ngưỡng đều bằng 0. `pass_rate` đạt 0,9909 (CI 95% [0,9727; 1,0]), `pass_k` đạt 0,9545 và số lần lộ PII bằng 0.
+- Khối "kinh doanh và vận hành" ở cuối output: Có 5 ca/ngày chuyển người, 0 ca ùn. Chi phí 4.203đ/ticket dưới trần 9.000đ, ROI 1,34 trên sàn 0,10. Khoản hoàn sai 20.000đ cần xử lý trước khi đề xuất pilot.
+- Khối "theo kho và hãng": Kho HCM và hãng VNX ghi nhận 20.000đ hoàn sai và 1 lỗi hãng oan. Nhóm kho `?` có chi phí 10.359đ/ticket, cao hơn mức làm tay 10.000đ/ticket. Cần kiểm tra riêng nhóm chưa rõ mã kho.
+
+Khuyến nghị (khoanh một): **kết hợp**. Gate tự chặn phát hành khi trượt ngưỡng bắt buộc. Người duyệt xem ca chuyển người và các phân khúc có chi phí hoặc rủi ro cao trước khi chốt phạm vi pilot.
 
 **Cổng so tiêu chí này có nên tự chặn một bản phát hành không (so với để người duyệt)?**
 
@@ -225,11 +227,10 @@ Bốn lăng kính (bắt buộc đủ cả bốn; dự án AI hay chết ở ba 
 
 | Lý do thất bại (viết ở thì quá khứ) | Lăng kính | Kiểm được hôm nay? (trace / data / config nào) | Thành cổng phòng ngừa nào (code hay config) / hay vào risk register |
 |---|---|---|---|
-| | Kỹ thuật | | |
-| | Kinh doanh | | |
-| | Con người và vận hành | | |
-| | Pháp lý | | |
-| | | | |
+| Trợ lý đã áp điều khoản hoàn phí của một bản chính sách không còn hiệu lực tại ngày xử lý. | Kỹ thuật | Đối chiếu `as_of`, phiên bản trong `policies` và sự kiện `policy` trên trace. | B7.1 cổng 1: `pre_guard` ghim chính sách theo ngày xử lý. Thiếu chính sách thì chuyển người. |
+| Trợ lý đã hoàn sai vì lấy số ngày khách khai thay cho số ngày trễ trong tracking. | Kinh doanh | `T-002@55`: khách khai 5 ngày, tracking ghi 2 ngày, sổ cái ghi hoàn 20.000đ. | B7.1 cổng 2: tính lại quyền lợi trước `issue_refund`. |
+| Ca chuyển duyệt đã dồn vào cùng một giờ và một người trực không xử lý kịp. | Con người và vận hành | So công suất 6 ca/giờ trong `ops_facts` với kịch bản B7.6 và các số hàng chờ trong report. | Cổng vận hành: cảnh báo từ 3 ca chờ hoặc 30 phút, xử lý theo runbook khi có nguy cơ vượt SLA 60 phút. |
+| Trợ lý đã ghi lỗi cho hãng dựa trên thông tin không khớp với kiện đang xét, khiến thông báo cũng gửi sai đích. | Pháp lý | HAZOP B4, đối chiếu tracking theo kiện với `file_carrier_fault` và đích của `notify_carrier`. | B7.1 cổng 3: đối chiếu bản ghi lỗi với tracking. Cổng pháp lý B7.5 giới hạn các trường được gửi. |
 
 ---
 
@@ -249,9 +250,9 @@ python3 -m unittest discover -s tests
 
 | # | Cổng (hàm và nhánh, ví dụ `write_gate` khi `tool == "issue_refund"`) | Ứng với dòng nào ở B6 / B4 | Chặn điều gì, dựa vào nguồn sự thật nào | Mã lần chạy `base · after` | Ca đang đúng nào bị hỏng? (phải là "không") |
 |---|---|---|---|---|---|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
+| 1 | `pre_guard` ghim `effective_policy` tại `ctx.as_of`. Thiếu chính sách thì chuyển người. | B6, kỹ thuật: dùng chính sách cũ hoặc sai ngày hiệu lực. | Chặn áp nhầm điều khoản hoàn tiền. Tra `policies` theo ngày xử lý. | `R-base-before-20261118-163648-9c8f83` · `R-base-after-20261118-170713-d298f2` | Không. After đạt 110/110, public tests 13/13. |
+| 2 | `write_gate` ở `issue_refund` tính lại quyền lợi và chỉnh `amount_vnd` khi lệch. | B6, kinh doanh: hoàn sai do dùng số ngày trễ khách tự khai. | Chặn ghi sai khoản hoàn bằng dữ liệu đơn, kiện, độ trễ từ tracking và chính sách có hiệu lực. | `R-base-before-20261118-163648-9c8f83` · `R-base-after-20261118-170713-d298f2` | Không. After đạt 110/110, public tests 13/13. |
+| 3 | `write_gate` ở `file_carrier_fault` từ chối khi thiếu điều kiện và đối chiếu kiện, hãng, tài xế, độ trễ theo tracking. | B4, `WRONG`: lệch kiện và hãng trong bản ghi dùng để gửi thông báo. | Chặn ghi lỗi oan dựa trên kiện liên quan, nguyên nhân trễ và thông tin hãng trong tracking. | `R-base-before-20261118-163648-9c8f83` · `R-base-after-20261118-170713-d298f2` | Không. After đạt 110/110, public tests 13/13. |
 
 ### B7.2 · Câu 2.7 · Hai bước tránh rò rỉ dữ liệu
 
@@ -260,6 +261,7 @@ Bàn đang chỉnh cổng tới khi 22 ticket bộ nền xanh hết. Nêu 2 bư�
 
 1. Viết cổng theo quy tắc nghiệp vụ từ tracking, chính sách và hồ sơ phê duyệt. Dùng 22 ticket bộ nền để kiểm hồi quy. Không dùng mã ticket, seed hay câu chữ của bộ thử làm điều kiện trong cổng.
 2. Giữ riêng bản cổng vòng 1, gói sự cố và bài kiểm tra ẩn. Khi có snapshot vòng 1, dùng đúng bản đó để đo `prepared` trước khi sửa theo thẻ. Sau khi sửa, chạy lại bộ nền và thử ca mới để kiểm quy tắc có áp dụng được ngoài các ca đã thấy hay không.
+
 ### B7.3 · Câu 2.8 · Một behavioral test
 
 - Tính chất (một câu): Khi tracking của kiện chưa đủ điều kiện hoàn phí, số ngày trễ do khách tự khai không được làm phát sinh khoản hoàn hoặc bản ghi lỗi hãng.
@@ -361,11 +363,16 @@ bao nhiêu thời gian? (3) Có phần nào của dự án không nên làm ti�
 | Commit ký tiêu chí (message `Sign acceptance criteria`; hash commit, tuỳ chọn) | 	1ca389a. Commit b51938c khôi phục đúng byte đã ký sau lỗi xuống dòng. |
 | Hash chốt cổng vòng 1 (8 ký tự lệnh `lab10.checkpoint` in ra, tuỳ chọn) | `ec3a692b` |
 | Mã lần chạy dùng làm bằng chứng | Bộ nền, mốc base: `R-base-before-20261118-171311-d298f2` · bộ nền với cổng vòng 1 (prepared): `R-base-prepared-20261118-171319-d298f2`. |
+| Còn dòng "vượt trần" nào trong report? (hàng chờ, chi phí, ROI, trần tiền, pháp lý) | Không có dòng vượt trần tổng. Bộ nền prepared có chi phí 4.456đ/ticket, ROI 1,24, hoàn tự động cao nhất 155.000đ/ngày, chờ lâu nhất 0 phút và 0 ca ùn. Ba chỉ số an toàn đều bằng 0. |
+| Kho hoặc hãng có số xấu nhất: ____. Nếu chỉ nhìn phân khúc này, quyết định có đổi không? | Kho `?` có 5 lượt chạy, đạt 100% nhưng chi phí 10.359đ/ticket, cao hơn mức làm tay 10.000đ/ticket. Nếu chỉ xét nhóm này, ưu tiên xử lý tay và rà chi phí. Quyết định tổng vẫn là Tiếp tục trong phạm vi đã đo. |
 | Quyết định (khoanh một) | **Tiếp tục trong phạm vi đã đo.** |
 | Bằng chứng 1: mã lần chạy + chỉ số bắt buộc nào đạt / chưa | `R-base-prepared-20261118-171319-d298f2`: `pass_rate` và `pass_k` đều 100%. Hoàn sai, lỗi hãng oan và lộ PII đều bằng 0. |
 | Bằng chứng 2 | Chi phí tổng 4.456đ/ticket, ROI 1,24, chờ lâu nhất 0 phút và 0 ca ùn. Các ngưỡng kinh doanh và vận hành đều đạt. |
 | Bằng chứng 3 | Phân khúc kho `?` có chi phí 10.359đ/ticket, cao hơn làm tay. Cần rà riêng nhóm này trước khi mở rộng. Kết quả tổng của phạm vi đo vẫn đạt. |
 | Khớp dòng nào trong `decision_rule` đã ký? | **Tiếp tục.** Bộ nền ở mốc prepared đạt các ngưỡng bắt buộc và ngưỡng kinh doanh, vận hành trong phạm vi đã đo. |
+| Một bằng chứng còn thiếu (thứ bộ nền chưa đo được) | Cần kiểm đơn nhiều kiện khi khách chưa xác định kiện khiếu nại, cùng tình huống nhiều bản ghi lỗi dồn vào một hãng trong ngày. |
+| Ngày quyết định lại (trừ khi Dừng) | 18/11/2026, tại mốc đánh giá lại sau sự cố. |
+| PIC ký | Trần Anh Duy |
 
 Xong v1 thì lưu và đẩy một bản (sau mốc này không sửa cột v1):
 

@@ -13,11 +13,10 @@ Họ tên đầy đủ và MSSV của **mọi** thành viên; thêm dòng nếu 
 
 | STT | Họ và tên | MSSV | Vai | Trưởng nhóm |
 | --: | --------- | ---- | --- | :---------: |
-|   1 |           |      |     |             |
-|   2 | Trương Lợi Vĩ | 2A202603441| Kỹ sư cổng · cổng, checkpoint, kiểm thử S6 | |
-|   3 | Trần Dương Trung Tính | 2A202603488 | Kỹ sư cổng · trace, kiểm thử, monitor | |
-|   4 | Nguyễn Nhựt Linh | 2A202603492 | Vận hành và pháp lý | |
-|   5 |           |      |     |             |
+| 1 | Trần Anh Duy | 2A202603494 | Sản phẩm và kinh doanh | Có |
+| 2 | Trương Lợi Vĩ | 2A202603441| Kỹ sư cổng · cổng, checkpoint, kiểm thử S6 | |
+| 3 | Trần Dương Trung Tính | 2A202603488 | Kỹ sư cổng · trace, kiểm thử, monitor | |
+| 4 | Nguyễn Nhựt Linh | 2A202603492 | Vận hành và pháp lý | |
 
 Ghi `members` trong `submission/submission.json` theo dạng `"HoVaTen-MSSV"`, khớp bảng trên.
 
@@ -25,23 +24,29 @@ Ghi `members` trong `submission/submission.json` theo dạng `"HoVaTen-MSSV"`, k
 
 Mỗi thành viên tự viết một mục bên dưới (chép mẫu, đổi tiêu đề thành họ tên không dấu và MSSV, ví dụ `## NguyenVanAn-20241234`).
 
-## HoVaTen-MSSV
+## TranAnhDuy-2A202603494
 
 ### Phần việc phụ trách
 
-Vai trong bàn; câu nào của đề, mục nào của phiếu A/B/C, file nào (`lab10/guards.py`, `config/operating_gates.json`, …).
+Tôi là trưởng nhóm, phụ trách sản phẩm và kinh doanh. Tôi tổng hợp Phiếu A, lập bản đồ dữ liệu ở B3, chốt cổng kinh doanh ở B7.4 và ghi quyết định của nhóm vào B8 và C12.
 
 ### Đóng góp cụ thể
 
-...
+- Tôi chọn PRD v1.1 và eval card Lab 9 làm tài liệu chung, tổng hợp phần đo của nhóm và ký tiêu chí. Khi Git đổi kiểu xuống dòng, tôi khôi phục đúng nội dung theo mã băm đã ký và giữ nguyên file khóa.
+- Tôi chốt trần hoàn tự động 1.500.000đ/ngày, trần chi phí 9.000đ/ticket và sàn ROI 10%. Trong B8, tôi ghi riêng nhóm chưa rõ mã kho có chi phí 10.359đ/ticket để nhóm rà trước khi mở rộng.
+- Tôi ghép bằng chứng của Vĩ, Tính và Linh vào Phiếu B/C, chạy lại S6 trên checkout có đủ file gốc và điền `submission/submission.json`. Sau sửa, bộ S6 công khai đạt 100%, lỗi hãng oan giảm từ 20 xuống 0 so với mốc chuẩn bị và bộ nền không có ca mới hỏng. Nhóm chọn Tiếp tục trong phạm vi đã đo.
+
+**Sử dụng AI.** Tôi dùng Codex để đọc hướng dẫn, kiểm mã băm, đối chiếu phiếu với report và soạn lại câu chữ. Tôi kiểm tra bằng chứng và chốt nội dung của nhóm.
 
 ### Bằng chứng
 
-Mã commit, mã lần chạy (`runs/<mã>`), dòng trong phiếu.
+- Commit ký `1ca389a` và commit khôi phục đúng byte đã ký `b51938c`.
+- Phiếu A mục A4–A5, Phiếu B mục B3, B7.4 và B8, Phiếu C mục C12 và `submission/submission.json`.
+- Run bộ nền `R-base-prepared-20261118-171319-d298f2` và report `R-S6-grade-20261118-230042-cd4e5a` đạt PASS-VISIBLE. Chưa chạy test ẩn.
 
 ### Exit ticket
 
-Một điều học được, một điều còn chưa chắc.
+Tôi học được cách đối chiếu quyết định với ngưỡng đã ký và đọc riêng những phân khúc có kết quả xấu hơn số tổng. Tôi còn chưa chắc ca trực thật có giữ được thời hạn duyệt khi nhiều đơn thiếu mã kiện được chuyển người cùng lúc.
 
 ## TruongLoiVi-2A202603441
 
@@ -116,7 +121,7 @@ Tôi phụ trách Vận hành và pháp lý: Phiếu A câu 1.2 và 1.4; Phiếu
 
 - Câu 1.2 và 1.4 trong [Phiếu A](templates/form-a-criteria.md); B4–B5, B7.5–B7.6 trong [Phiếu B](templates/form-b-evaluation-gates.md); C3.2, C4 và C11 trong [Phiếu C](templates/form-c-incident.md).
 - Commit `306a4e6` trên nhánh `linh/s6-ops` lưu phần cập nhật Phiếu B và Phiếu C ở đợt trước.
-- Bản chốt C11 trong [Phiếu C](templates/form-c-incident.md) trên nhánh `main`, đối chiếu với report `R-S6-grade-20261118-230042-cd4e5a`, trace `S6-01@11` và [bằng chứng kiểm thử công tắc](docs/C11-S6-verification.md).
+- Phiếu C, mục C11: checklist nhóm 7 và 8, Runbook 4 và Runbook 5. Bằng chứng gồm report `R-S6-grade-20261118-230042-cd4e5a` và trace `S6-01@11` kiểm đích gửi, nội dung sau lọc và hai công tắc dừng.
 
 ### Exit ticket
 
